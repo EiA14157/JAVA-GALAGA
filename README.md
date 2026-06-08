@@ -1,21 +1,25 @@
 # Java Galaga
 
-Swing으로 만든 간단한 갤러그 스타일 게임입니다.
+A simple Galaga-style arcade game built with Java Swing.
 
-## 포함된 기능
+## Features
 
-- 시작 화면
-- 플레이어 좌우 이동
-- 스페이스바 발사
-- 적 편대 이동
-- 적 총알 공격
-- 충돌 판정과 점수 시스템
-- 3스테이지 진행
-- 게임 오버 / 클리어 화면
+- Resizable game window
+- Player movement with arrow keys
+- Player shooting with the space bar
+- Enemy formation movement
+- Score, lives, and stage UI
+- Start, game over, and clear screens
+- PNG sprite assets for the player, enemies, and lasers
 
-## 폴더 구조
+## Project Structure
 
 ```text
+assets/
+  player_ship.png
+  enemy_bug.png
+  player_laser.png
+  enemy_laser.png
 src/
   galaga/
     Main.java
@@ -28,16 +32,21 @@ src/
     Bullet.java
 ```
 
-## 실행 방법
+## Run
 
-JDK가 설치되어 있으면 아래처럼 컴파일하고 실행할 수 있습니다.
+Compile:
 
 ```bash
 javac -d out src/galaga/*.java
+```
+
+Run:
+
+```bash
 java -cp out galaga.Main
 ```
 
-Windows PowerShell에서는 다음처럼 실행해도 됩니다.
+Windows PowerShell example:
 
 ```powershell
 New-Item -ItemType Directory -Force out | Out-Null

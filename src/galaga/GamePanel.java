@@ -1,38 +1,48 @@
 package galaga;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener {
-    private static final int PANEL_WIDTH = 800;
-    private static final int PANEL_HEIGHT = 600;
+    private static final int BASE_WIDTH = 800;
+    private static final int BASE_HEIGHT = 600;
     private static final int PLAYER_Y = 520;
     private static final int TIMER_DELAY_MS = 16;
     private static final int MAX_STAGE = 3;
+    private static final int HUD_LINE_Y = 64;
+    private static final String ASSET_DIR = "assets";
 
     private final Timer timer;
-    private final Random random;
     private final Font titleFont;
     private final Font bodyFont;
     private final Font hudFont;
     private final List<Bullet> playerBullets;
     private final List<Bullet> enemyBullets;
     private final List<Enemy> enemies;
+    private final BufferedImage playerSprite;
+    private final BufferedImage enemySprite;
+    private final BufferedImage playerBulletSprite;
+    private final BufferedImage enemyBulletSprite;
 
     private Player player;
     private GameState gameState;
@@ -47,17 +57,20 @@ public class GamePanel extends JPanel implements ActionListener {
     private int starOffset;
 
     public GamePanel() {
-        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setPreferredSize(new Dimension(BASE_WIDTH, BASE_HEIGHT));
         setBackground(new Color(6, 10, 24));
         setFocusable(true);
 
-        random = new Random();
         titleFont = new Font("SansSerif", Font.BOLD, 34);
         bodyFont = new Font("SansSerif", Font.PLAIN, 18);
         hudFont = new Font("SansSerif", Font.BOLD, 16);
         playerBullets = new ArrayList<>();
         enemyBullets = new ArrayList<>();
         enemies = new ArrayList<>();
+        playerSprite = loadSprite("player_ship.png");
+        enemySprite = loadSprite("enemy_bug.png");
+        playerBulletSprite = loadSprite("player_laser.png");
+        enemyBulletSprite = loadSprite("enemy_laser.png");
 
         addKeyListener(new KeyHandler());
         startNewGame();
@@ -74,14 +87,14 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void startNewGame() {
-        player = new Player(PANEL_WIDTH / 2 - 21, PLAYER_Y);
+        player = new Player(BASE_WIDTH / 2 - 21, PLAYER_Y);
         score = 0;
         stage = 1;
         resetStage();
     }
 
     private void resetStage() {
-        player.resetPosition(PANEL_WIDTH, PLAYER_Y);
+        player.resetPosition(BASE_WIDTH, PLAYER_Y);
         playerBullets.clear();
         enemyBullets.clear();
         enemies.clear();
@@ -113,7 +126,7 @@ public class GamePanel extends JPanel implements ActionListener {
         if (gameState == GameState.PLAYING) {
             updateGame();
         }
-        starOffset = (starOffset + 2) % PANEL_HEIGHT;
+        starOffset = (starOffset + 2) % BASE_HEIGHT;
         repaint();
     }
 
@@ -134,7 +147,7 @@ public class GamePanel extends JPanel implements ActionListener {
         if (rightPressed) {
             player.moveRight();
         }
-        player.clampToWidth(PANEL_WIDTH);
+        player.clampToWidth(BASE_WIDTH);
     }
 
     private void handlePlayerShooting() {
@@ -164,7 +177,7 @@ public class GamePanel extends JPanel implements ActionListener {
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
             bullet.update();
-            if (bullet.isOutOfBounds(PANEL_HEIGHT)) {
+            if (bullet.isOutOfBounds(BASE_HEIGHT)) {
                 iterator.remove();
             }
         }
@@ -180,7 +193,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         for (Enemy enemy : enemies) {
             enemy.move(horizontalSpeed * enemyDirection, 0);
-            if (enemy.getX() <= 16 || enemy.getX() + enemy.getWidth() >= PANEL_WIDTH - 16) {
+            if (enemy.getX() <= 16 || enemy.getX() + enemy.getWidth() >= BASE_WIDTH - 16) {
                 shouldDrop = true;
             }
         }
@@ -233,7 +246,7 @@ public class GamePanel extends JPanel implements ActionListener {
             if (bullet.getBounds().intersects(player.getBounds())) {
                 iterator.remove();
                 player.loseLife();
-                player.resetPosition(PANEL_WIDTH, PLAYER_Y);
+                player.resetPosition(BASE_WIDTH, PLAYER_Y);
 
                 if (player.getLives() <= 0) {
                     gameState = GameState.GAME_OVER;
@@ -262,6 +275,8 @@ public class GamePanel extends JPanel implements ActionListener {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.scale(getScaleX(), getScaleY());
 
         drawBackground(g2);
 
@@ -282,12 +297,12 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void drawBackground(Graphics2D g2) {
         g2.setColor(new Color(10, 18, 40));
-        g2.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+        g2.fillRect(0, 0, BASE_WIDTH, BASE_HEIGHT);
 
         g2.setColor(new Color(100, 140, 255, 150));
         for (int i = 0; i < 80; i++) {
-            int x = (i * 97) % PANEL_WIDTH;
-            int y = ((i * 57) + starOffset) % PANEL_HEIGHT;
+            int x = (i * 97) % BASE_WIDTH;
+            int y = ((i * 57) + starOffset) % BASE_HEIGHT;
             int size = i % 3 == 0 ? 3 : 2;
             g2.fillOval(x, y, size, size);
         }
@@ -306,47 +321,30 @@ public class GamePanel extends JPanel implements ActionListener {
         g2.setColor(Color.WHITE);
         g2.drawString("Score: " + score, 20, 28);
         g2.drawString("Lives: " + player.getLives(), 20, 52);
-        g2.drawString("Stage: " + stage, PANEL_WIDTH - 100, 28);
+        g2.drawString("Stage: " + stage, BASE_WIDTH - 100, 28);
         g2.setColor(new Color(120, 180, 255));
-        g2.drawLine(0, 64, PANEL_WIDTH, 64);
+        g2.drawLine(0, HUD_LINE_Y, BASE_WIDTH, HUD_LINE_Y);
     }
 
     private void drawPlayer(Graphics2D g2) {
-        int[] bodyX = {
-            player.getX(),
-            player.getX() + player.getWidth() / 2,
-            player.getX() + player.getWidth()
-        };
-        int[] bodyY = {
-            player.getY() + player.getHeight(),
-            player.getY(),
-            player.getY() + player.getHeight()
-        };
-
-        g2.setColor(new Color(90, 255, 205));
-        g2.fillPolygon(bodyX, bodyY, 3);
-        g2.setColor(new Color(30, 120, 255));
-        g2.fillRect(player.getX() + 10, player.getY() + 10, 22, 10);
+        drawSprite(g2, playerSprite, player.getX() - 4, player.getY() - 8, player.getWidth() + 8, player.getHeight() + 16);
     }
 
     private void drawEnemies(Graphics2D g2) {
         for (Enemy enemy : enemies) {
-            int x = enemy.getX();
-            int y = enemy.getY();
-
-            g2.setColor(enemy.getRow() % 2 == 0 ? new Color(255, 120, 120) : new Color(255, 186, 80));
-            g2.fillOval(x, y, enemy.getWidth(), enemy.getHeight());
-            g2.setColor(new Color(255, 245, 245));
-            g2.fillRect(x + 6, y + 7, 7, 4);
-            g2.fillRect(x + 21, y + 7, 7, 4);
-            g2.setColor(new Color(120, 30, 30));
-            g2.drawArc(x + 9, y + 10, 16, 8, 180, 180);
+            drawSprite(g2, enemySprite, enemy.getX() - 5, enemy.getY() - 4, enemy.getWidth() + 10, enemy.getHeight() + 12);
         }
     }
 
     private void drawBullets(Graphics2D g2, List<Bullet> bullets, Color color) {
-        g2.setColor(color);
         for (Bullet bullet : bullets) {
+            BufferedImage sprite = bullet.isFromPlayer() ? playerBulletSprite : enemyBulletSprite;
+            if (sprite != null) {
+                drawSprite(g2, sprite, bullet.getX() - 2, bullet.getY() - 4, bullet.getWidth() + 6, bullet.getHeight() + 8);
+                continue;
+            }
+
+            g2.setColor(color);
             g2.fillRoundRect(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight(), 4, 4);
         }
     }
@@ -375,8 +373,40 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void drawCenteredString(Graphics2D g2, String text, int y) {
         int textWidth = g2.getFontMetrics().stringWidth(text);
-        int x = (PANEL_WIDTH - textWidth) / 2;
+        int x = (BASE_WIDTH - textWidth) / 2;
         g2.drawString(text, x, y);
+    }
+
+    private double getScaleX() {
+        return getWidth() / (double) BASE_WIDTH;
+    }
+
+    private double getScaleY() {
+        return getHeight() / (double) BASE_HEIGHT;
+    }
+
+    private BufferedImage loadSprite(String fileName) {
+        File file = new File(ASSET_DIR, fileName);
+        if (!file.exists()) {
+            return null;
+        }
+
+        try {
+            return ImageIO.read(file);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private void drawSprite(Graphics2D g2, BufferedImage sprite, int x, int y, int width, int height) {
+        if (sprite != null) {
+            g2.drawImage(sprite.getScaledInstance(width, height, Image.SCALE_SMOOTH), x, y, null);
+            return;
+        }
+
+        g2.setColor(new Color(90, 255, 205));
+        g2.setStroke(new BasicStroke(2f));
+        g2.drawRoundRect(x, y, width, height, 8, 8);
     }
 
     private class KeyHandler extends KeyAdapter {

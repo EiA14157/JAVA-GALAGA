@@ -39,6 +39,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private final List<Bullet> playerBullets;
     private final List<Bullet> enemyBullets;
     private final List<Enemy> enemies;
+    private final BufferedImage backgroundSprite;
     private final BufferedImage playerSprite;
     private final BufferedImage enemySprite;
     private final BufferedImage playerBulletSprite;
@@ -54,7 +55,6 @@ public class GamePanel extends JPanel implements ActionListener {
     private int playerShotCooldown;
     private int enemyShotCooldown;
     private int enemyDirection;
-    private int starOffset;
 
     public GamePanel() {
         setPreferredSize(new Dimension(BASE_WIDTH, BASE_HEIGHT));
@@ -67,6 +67,7 @@ public class GamePanel extends JPanel implements ActionListener {
         playerBullets = new ArrayList<>();
         enemyBullets = new ArrayList<>();
         enemies = new ArrayList<>();
+        backgroundSprite = loadSprite("space_background.png");
         playerSprite = loadSprite("player_ship.png");
         enemySprite = loadSprite("enemy_bug.png");
         playerBulletSprite = loadSprite("player_laser.png");
@@ -126,7 +127,6 @@ public class GamePanel extends JPanel implements ActionListener {
         if (gameState == GameState.PLAYING) {
             updateGame();
         }
-        starOffset = (starOffset + 2) % BASE_HEIGHT;
         repaint();
     }
 
@@ -296,16 +296,13 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void drawBackground(Graphics2D g2) {
+        if (backgroundSprite != null) {
+            g2.drawImage(backgroundSprite.getScaledInstance(BASE_WIDTH, BASE_HEIGHT, Image.SCALE_SMOOTH), 0, 0, null);
+            return;
+        }
+
         g2.setColor(new Color(10, 18, 40));
         g2.fillRect(0, 0, BASE_WIDTH, BASE_HEIGHT);
-
-        g2.setColor(new Color(100, 140, 255, 150));
-        for (int i = 0; i < 80; i++) {
-            int x = (i * 97) % BASE_WIDTH;
-            int y = ((i * 57) + starOffset) % BASE_HEIGHT;
-            int size = i % 3 == 0 ? 3 : 2;
-            g2.fillOval(x, y, size, size);
-        }
     }
 
     private void drawGame(Graphics2D g2) {

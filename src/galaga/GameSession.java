@@ -31,7 +31,7 @@ public class GameSession {
             return;
         }
 
-        // Update one frame of gameplay in a stable, easy-to-follow order.
+        // 한 프레임의 게임 로직을 이해하기 쉬운 순서로 갱신한다.
         handlePlayerMovement(inputState);
         handlePlayerShooting(inputState);
         updateBullets();
@@ -85,7 +85,7 @@ public class GameSession {
     }
 
     private void startNewGame() {
-        // Reset score and stage whenever a completely new run begins.
+        // 새 게임이 시작되면 점수와 스테이지를 처음 상태로 되돌린다.
         player = new Player(GameConfig.BASE_WIDTH / 2 - 21, GameConfig.PLAYER_Y);
         score = 0;
         stage = 1;
@@ -93,7 +93,7 @@ public class GameSession {
     }
 
     private void resetStage() {
-        // Clear transient state before rebuilding the current wave.
+        // 현재 웨이브를 다시 만들기 전에 일시적인 상태를 모두 비운다.
         player.resetPosition(GameConfig.BASE_WIDTH, GameConfig.PLAYER_Y);
         playerBullets.clear();
         enemyBullets.clear();
@@ -140,7 +140,7 @@ public class GameSession {
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
             bullet.update();
-            // Bullets outside the screen no longer matter for collisions or drawing.
+            // 화면 밖으로 나간 탄환은 충돌 판정과 렌더링 대상에서 제외한다.
             if (bullet.isOutOfBounds(GameConfig.BASE_HEIGHT)) {
                 iterator.remove();
             }
@@ -157,7 +157,7 @@ public class GameSession {
 
         for (Enemy enemy : enemies) {
             enemy.move(horizontalSpeed * enemyDirection, 0);
-            // Touching a side wall flips the swarm and makes it drop on the next pass.
+            // 적 무리가 좌우 벽에 닿으면 방향을 바꾸고 한 칸 아래로 내려오게 한다.
             if (enemy.getX() <= 16 || enemy.getX() + enemy.getWidth() >= GameConfig.BASE_WIDTH - 16) {
                 shouldDrop = true;
             }
@@ -175,7 +175,7 @@ public class GameSession {
     }
 
     private void handleEnemyShooting() {
-        // Enemy firing is not implemented yet, so the list is kept empty for now.
+        // 아직 적 발사 패턴이 구현되지 않아 목록을 비운 상태로 유지한다.
         enemyBullets.clear();
     }
 
@@ -200,7 +200,7 @@ public class GameSession {
             if (hitEnemy != null) {
                 bulletIterator.remove();
                 enemies.remove(hitEnemy);
-                // Lower rows are worth a bit more to reward riskier shots.
+                // 아래쪽 적일수록 조금 더 높은 점수를 줘서 위험한 샷에 보상을 준다.
                 score += 100 + hitEnemy.getRow() * 25;
             }
         }
@@ -228,7 +228,7 @@ public class GameSession {
             return;
         }
 
-        // Finishing the last wave clears the game, otherwise build the next stage.
+        // 마지막 웨이브를 끝내면 클리어, 아니면 다음 스테이지를 구성한다.
         if (stage >= GameConfig.MAX_STAGE) {
             gameState = GameState.CLEAR;
             return;

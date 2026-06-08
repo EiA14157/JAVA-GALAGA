@@ -22,7 +22,7 @@ public class Player extends Sprite {
         if (x < 0) {
             x = 0;
         }
-        // Clamp both sides so the ship never leaves the visible play field.
+        // 우주선이 화면 양쪽 경계를 벗어나지 않도록 위치를 고정한다.
         int maxX = panelWidth - width;
         if (x > maxX) {
             x = maxX;
@@ -40,7 +40,7 @@ public class Player extends Sprite {
     }
 
     public void resetPosition(int panelWidth, int yPosition) {
-        // Restore the ship to the default spawn point after hits or stage resets.
+        // 피격되거나 스테이지가 바뀌면 기본 시작 위치로 되돌린다.
         x = panelWidth / 2 - width / 2;
         y = yPosition;
     }

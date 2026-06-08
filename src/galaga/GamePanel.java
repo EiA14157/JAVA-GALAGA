@@ -60,7 +60,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 inputState.setRightPressed(true);
             } else if (keyCode == KeyEvent.VK_SPACE) {
                 inputState.setSpacePressed(true);
-                // Fire once on key press so shooting feels responsive before repeat kicks in.
+                // 키를 누르는 순간 한 발 즉시 발사해 입력 반응을 빠르게 만든다.
                 session.firePlayerBulletIfPossible();
             } else if (keyCode == KeyEvent.VK_ENTER) {
                 if (session.canRestart()) {

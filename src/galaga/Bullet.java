@@ -11,7 +11,7 @@ public class Bullet extends Sprite {
     }
 
     public void update() {
-        // Player bullets move up, enemy bullets move down.
+        // 플레이어 탄환은 위로, 적 탄환은 아래로 이동한다.
         if (fromPlayer) {
             y -= speed;
         } else {

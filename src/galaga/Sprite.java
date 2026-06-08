@@ -16,7 +16,7 @@ public abstract class Sprite {
     }
 
     public Rectangle getBounds() {
-        // Every collision check in the game uses this shared rectangle hitbox.
+        // 게임의 모든 충돌 판정은 이 공통 사각형 히트박스를 사용한다.
         return new Rectangle(x, y, width, height);
     }
 

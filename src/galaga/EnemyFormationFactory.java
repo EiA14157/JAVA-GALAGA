@@ -5,7 +5,7 @@ import java.util.List;
 
 public class EnemyFormationFactory {
     public List<Enemy> createFormation(int stage) {
-        // Later stages add rows so the wave gets denser without changing layout logic.
+        // 스테이지가 올라갈수록 적 행 수를 늘려 밀도를 높인다.
         int rows = 3 + Math.min(stage, 2);
         int cols = 6;
         int startX = 120;

@@ -60,7 +60,7 @@ src/
 Compile:
 
 ```bash
-javac -d out src/galaga/*.java
+javac -encoding UTF-8 -d out src/galaga/*.java
 ```
 
 Run:
@@ -73,6 +73,6 @@ Windows PowerShell example:
 
 ```powershell
 New-Item -ItemType Directory -Force out | Out-Null
-javac -d out src/galaga/*.java
+javac -encoding UTF-8 -d out src/galaga/*.java
 java -cp out galaga.Main
 ```

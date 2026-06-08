@@ -49,7 +49,7 @@ public class GameAssets {
         try {
             return ImageIO.read(file);
         } catch (IOException e) {
-            // Fall back to simple shapes if an image cannot be loaded.
+            // 이미지를 불러오지 못하면 도형 렌더링으로 대체한다.
             return null;
         }
     }

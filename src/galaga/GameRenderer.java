@@ -28,7 +28,7 @@ public class GameRenderer {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        // Keep gameplay coordinates based on 800x600 even when the window is resized.
+        // 창 크기가 바뀌어도 내부 좌표계는 800x600 기준으로 유지한다.
         g2.scale(panel.getWidth() / (double) GameConfig.BASE_WIDTH, panel.getHeight() / (double) GameConfig.BASE_HEIGHT);
 
         drawBackground(g2);

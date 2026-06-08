@@ -12,7 +12,7 @@ public class GameFrame extends JFrame {
         setResizable(true);
 
         panel = new GamePanel();
-        // GamePanel owns the game loop and all rendering work.
+        // 실제 게임 루프와 렌더링은 GamePanel이 전담한다.
         add(panel);
         pack();
         setMinimumSize(new Dimension(640, 480));
@@ -23,7 +23,7 @@ public class GameFrame extends JFrame {
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (visible) {
-            // Hand focus to the panel so keyboard input works immediately.
+            // 창이 보이면 패널에 포커스를 줘서 키 입력이 바로 동작하게 한다.
             panel.requestFocusInWindow();
         }
     }

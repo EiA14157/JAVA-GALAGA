@@ -22,6 +22,7 @@ public class Player extends Sprite {
         if (x < 0) {
             x = 0;
         }
+        // Clamp both sides so the ship never leaves the visible play field.
         int maxX = panelWidth - width;
         if (x > maxX) {
             x = maxX;
@@ -39,6 +40,7 @@ public class Player extends Sprite {
     }
 
     public void resetPosition(int panelWidth, int yPosition) {
+        // Restore the ship to the default spawn point after hits or stage resets.
         x = panelWidth / 2 - width / 2;
         y = yPosition;
     }

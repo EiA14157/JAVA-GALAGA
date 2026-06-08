@@ -12,6 +12,7 @@ public class GameFrame extends JFrame {
         setResizable(true);
 
         panel = new GamePanel();
+        // GamePanel owns the game loop and all rendering work.
         add(panel);
         pack();
         setMinimumSize(new Dimension(640, 480));
@@ -22,6 +23,7 @@ public class GameFrame extends JFrame {
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (visible) {
+            // Hand focus to the panel so keyboard input works immediately.
             panel.requestFocusInWindow();
         }
     }

@@ -16,6 +16,7 @@ public abstract class Sprite {
     }
 
     public Rectangle getBounds() {
+        // Every collision check in the game uses this shared rectangle hitbox.
         return new Rectangle(x, y, width, height);
     }
 

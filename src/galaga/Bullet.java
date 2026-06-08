@@ -11,6 +11,7 @@ public class Bullet extends Sprite {
     }
 
     public void update() {
+        // Player bullets move up, enemy bullets move down.
         if (fromPlayer) {
             y -= speed;
         } else {

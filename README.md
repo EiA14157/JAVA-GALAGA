@@ -1,21 +1,23 @@
 # Java Galaga
 
-A simple Galaga-style arcade game built with Java Swing.
+Java Swing으로 구현한 간단한 갤러그 스타일 아케이드 게임입니다.
 
-## Features
+## 주요 기능
 
-- Resizable game window
-- Player movement with arrow keys
-- Player shooting with the space bar
-- Enemy formation movement
-- Score, lives, and stage UI
-- Start, game over, and clear screens
-- PNG sprite assets for the player, enemies, and lasers
+- 창 크기 조절 가능
+- 방향키를 이용한 플레이어 이동
+- 스페이스바를 이용한 플레이어 발사
+- 적 편대 이동
+- 점수, 목숨, 스테이지 UI 표시
+- 시작 화면, 게임 오버 화면, 클리어 화면
+- 플레이어, 적, 레이저에 PNG 스프라이트 적용
+- 우주 배경 이미지 적용
 
-## Project Structure
+## 프로젝트 구조
 
 ```text
 assets/
+  space_background.png
   player_ship.png
   enemy_bug.png
   player_laser.png
@@ -38,38 +40,38 @@ src/
     Bullet.java
 ```
 
-## File Responsibilities
+## 파일 역할
 
-- `Main.java`: Starts the Swing application on the event dispatch thread.
-- `GameFrame.java`: Creates the window and hosts the game panel.
-- `GamePanel.java`: Connects Swing timer ticks, keyboard input, and rendering.
-- `GameConfig.java`: Stores shared gameplay and layout constants.
-- `GameAssets.java`: Loads and exposes sprite assets.
-- `GameRenderer.java`: Draws the current game state to the screen.
-- `GameSession.java`: Owns gameplay state and update rules such as movement, collisions, score, and stage flow.
-- `EnemyFormationFactory.java`: Builds the enemy layout for each stage.
-- `InputState.java`: Tracks which control keys are currently held down.
-- `GameState.java`: Defines the high-level screen/game states.
-- `Sprite.java`: Base rectangle-backed entity for collision and position data.
-- `Player.java`: Player ship behavior and lives.
-- `Enemy.java`: Enemy position and row metadata.
-- `Bullet.java`: Bullet movement and bounds checks.
+- `Main.java`: Swing 애플리케이션을 시작합니다.
+- `GameFrame.java`: 게임 창을 생성하고 `GamePanel`을 표시합니다.
+- `GamePanel.java`: 타이머, 키 입력, 화면 렌더링을 연결합니다.
+- `GameConfig.java`: 게임 전반에서 사용하는 상수와 설정값을 관리합니다.
+- `GameAssets.java`: 스프라이트와 배경 이미지를 불러옵니다.
+- `GameRenderer.java`: 현재 게임 상태를 화면에 그립니다.
+- `GameSession.java`: 이동, 충돌, 점수, 스테이지 진행 등 핵심 게임 로직을 관리합니다.
+- `EnemyFormationFactory.java`: 스테이지에 맞는 적 편대를 생성합니다.
+- `InputState.java`: 현재 눌린 키 상태를 추적합니다.
+- `GameState.java`: 시작 화면, 플레이 중, 게임 오버 같은 상태를 정의합니다.
+- `Sprite.java`: 위치와 충돌 범위를 가지는 기본 객체 클래스입니다.
+- `Player.java`: 플레이어 우주선의 이동과 목숨 정보를 관리합니다.
+- `Enemy.java`: 적 위치와 행 정보를 관리합니다.
+- `Bullet.java`: 총알 이동과 화면 밖 제거 처리를 담당합니다.
 
-## Run
+## 실행 방법
 
-Compile:
+컴파일:
 
 ```bash
 javac -encoding UTF-8 -d out src/galaga/*.java
 ```
 
-Run:
+실행:
 
 ```bash
 java -cp out galaga.Main
 ```
 
-Windows PowerShell example:
+Windows PowerShell 예시:
 
 ```powershell
 New-Item -ItemType Directory -Force out | Out-Null
